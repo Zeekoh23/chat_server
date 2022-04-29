@@ -48,7 +48,4 @@ app.route("/favicon.ico").get((req, res) => {
     res.status(204);
     res.end();
 });
-/*app.all("*", (req: Request, res: Response, next: NextFunction) => {
-  next(new ErrorHandling(`Can't find ${req.originalUrl} on this server`, 404));
-});*/
 app.use(errorController_1.GlobalErrorHandler);
