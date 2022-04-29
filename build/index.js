@@ -44,7 +44,7 @@ app.use("/api/v1/socket", socketroutes_1.socketrouter);
 app.use("/accesstoken", agoraTokenController_1.agorarouter);
 app.use("/", viewRoutes_1.viewrouter);
 //catch the favicon.ico to show no content status
-app.route("/favicon.ico").get((req, res) => res.status(204));
+app.get("/favicon.ico", (req, res) => res.status(204));
 /*app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorHandling(`Can't find ${req.originalUrl} on this server`, 404));
 });*/
