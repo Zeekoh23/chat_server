@@ -63,6 +63,10 @@ app.route("/favicon.ico").get((req: Request, res: Response) => {
   res.end();
 });
 
-//app.use(GlobalErrorHandler);
+app.all("*", (req: Request, res: Response, next: NextFunction) => {
+  next(new ErrorHandling(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(GlobalErrorHandler);
 
 export { app };
