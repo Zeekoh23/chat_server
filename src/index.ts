@@ -61,9 +61,9 @@ app.route("/check").get((req: Request, res: Response) => {
   return res.json("App working well");
 });
 
-app.all("*", (req: Request, res: Response, next: NextFunction) => {
+/*app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorHandling(`Can't find ${req.originalUrl} on this server`, 404));
-});
+});*/
 
 app.use(GlobalErrorHandler);
 
