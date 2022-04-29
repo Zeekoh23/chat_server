@@ -57,10 +57,6 @@ app.use("/api/v1/socket", socketrouter);
 app.use("/accesstoken", agorarouter);
 app.use("/", viewrouter);
 
-app.route("/check").get((req: Request, res: Response) => {
-  return res.json("App working well");
-});
-
 /*app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorHandling(`Can't find ${req.originalUrl} on this server`, 404));
 });*/
