@@ -45,8 +45,8 @@ mongoose
 
 app.use(AppRouter.getInstance());
 
-const server: any = httpServer.listen(4000, "0.0.0.0", () => {
-  console.log("app running on port 4000");
+const server: any = httpServer.listen(port, "0.0.0.0", () => {
+  console.log(`app running on port ${port}`);
 });
 
 /*const server1: any = app.listen(4000, () => {
