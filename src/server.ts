@@ -45,10 +45,6 @@ mongoose
 
 app.use(AppRouter.getInstance());
 
-app.route("/check").get((req: Request, res: Response) => {
-  return res.json("App working well");
-});
-
 const server: any = httpServer.listen(port, "0.0.0.0", () => {
   console.log(`app running on port ${port}`);
 });

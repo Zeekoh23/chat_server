@@ -54,9 +54,6 @@ mongoose_1.default
 })
     .catch((err) => console.log("error is " + err));
 _1.app.use(AppRouter_1.AppRouter.getInstance());
-_1.app.route("/check").get((req, res) => {
-    return res.json("App working well");
-});
 const server = socketController_1.httpServer.listen(port, "0.0.0.0", () => {
     console.log(`app running on port ${port}`);
 });
