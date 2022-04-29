@@ -63,6 +63,6 @@ app.route("/favicon.ico").get((req: Request, res: Response) => {
   res.end();
 });
 
-app.use(GlobalErrorHandler);
+//app.use(GlobalErrorHandler);
 
 export { app };

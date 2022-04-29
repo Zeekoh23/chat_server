@@ -13,7 +13,6 @@ const morgan_1 = __importDefault(require("morgan"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const ejsmate = require("ejs-mate");
-const errorController_1 = require("./controllers/errorController");
 const app = (0, express_1.default)();
 exports.app = app;
 const userRoutes_1 = require("./routes/userRoutes");
@@ -48,4 +47,3 @@ app.route("/favicon.ico").get((req, res) => {
     res.status(204);
     res.end();
 });
-app.use(errorController_1.GlobalErrorHandler);
