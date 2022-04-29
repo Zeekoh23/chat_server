@@ -57,10 +57,6 @@ app.use("/api/v1/socket", socketrouter);
 app.use("/accesstoken", agorarouter);
 app.use("", viewrouter);
 
-app.route("/check").get((req: Request, res: Response) => {
-  return res.json("App working well");
-});
-
 //catch the favicon.ico to show no content status
 app.route("/favicon.ico").get((req: Request, res: Response) => {
   res.status(204);

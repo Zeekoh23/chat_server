@@ -12,3 +12,6 @@ viewrouter.get("/resetpassword/:token", viewController_1.resetPassword);
 viewrouter.route("/").get((req, res) => {
     return res.json("home to chat easy");
 });
+viewrouter.route("/check").get((req, res) => {
+    return res.json("App working well");
+});
