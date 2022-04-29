@@ -4,7 +4,7 @@ import { resetPassword } from "../controllers/viewController";
 const viewrouter: Router = express.Router();
 
 viewrouter.get("/resetpassword/:token", resetPassword);
-viewrouter.get("/", (req: Request, res: Response) => {
+viewrouter.get("", (req: Request, res: Response) => {
   return res.status(200).json("home to chat easy");
 });
 export { viewrouter };
