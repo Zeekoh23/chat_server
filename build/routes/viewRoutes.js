@@ -9,3 +9,6 @@ const viewController_1 = require("../controllers/viewController");
 const viewrouter = express_1.default.Router();
 exports.viewrouter = viewrouter;
 viewrouter.get("/resetpassword/:token", viewController_1.resetPassword);
+viewrouter.get("/", (req, res) => {
+    return res.status(200).json("home to chat easy");
+});
