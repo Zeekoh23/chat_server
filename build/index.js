@@ -42,9 +42,9 @@ app.use("/api/v1/users", userRoutes_1.userrouter);
 app.use("/api/v1/chats", chatRoutes_1.chatrouter);
 app.use("/api/v1/socket", socketroutes_1.socketrouter);
 app.use("/accesstoken", agoraTokenController_1.agorarouter);
-app.use("/", viewRoutes_1.viewrouter);
+app.use("", viewRoutes_1.viewrouter);
 //catch the favicon.ico to show no content status
-app.get("/favicon.ico", (req, res) => res.status(204));
+app.route("/favicon.ico").get((req, res) => res.status(204));
 /*app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorHandling(`Can't find ${req.originalUrl} on this server`, 404));
 });*/

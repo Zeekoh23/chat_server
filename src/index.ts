@@ -55,10 +55,10 @@ app.use("/api/v1/users", userrouter);
 app.use("/api/v1/chats", chatrouter);
 app.use("/api/v1/socket", socketrouter);
 app.use("/accesstoken", agorarouter);
-app.use("/", viewrouter);
+app.use("", viewrouter);
 
 //catch the favicon.ico to show no content status
-app.get("/favicon.ico", (req: Request, res: Response) => res.status(204));
+app.route("/favicon.ico").get((req: Request, res: Response) => res.status(204));
 
 /*app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorHandling(`Can't find ${req.originalUrl} on this server`, 404));
