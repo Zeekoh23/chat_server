@@ -89,7 +89,7 @@ export const signup = CatchAsync(
 
     //const user = await User.create(req.body);
     const url: string = `${req.protocol}://${req.get("host")}/me`;
-    //await new Email(user, url).sendWelcome();
+    await new Email(user, url).sendWelcome();
     createSendToken(user, 201, res, req);
   }
 );

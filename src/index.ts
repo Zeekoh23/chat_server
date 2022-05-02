@@ -63,6 +63,11 @@ app.route("/favicon.ico").get((req: Request, res: Response) => {
   res.end();
 });
 
+app.route("/img/favicon.png").get((req: Request, res: Response) => {
+  res.status(204);
+  res.end();
+});
+
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorHandling(`Can't find ${req.originalUrl} on this server!`, 404));
 });
