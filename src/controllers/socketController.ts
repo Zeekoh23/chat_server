@@ -111,6 +111,18 @@ io.on("connection", (socket: any) => {
       });
     });
 
+    socket.on("sendtyping", (type: any) => {
+      var typing: string = type.typing;
+      var sender: string = type.sender;
+      var receiver: string = type.receiver;
+
+      socket.in(receiver).emit("receivetyping", {
+        typing: typing,
+        sender: sender,
+        receiver: receiver,
+      });
+    });
+
     socket.on("sendmessage", (message: any) => {
       var receiverid: string = message.receiverid;
       var senderid: string = message.senderid;
