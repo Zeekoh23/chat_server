@@ -101,6 +101,16 @@ io.on("connection", (socket) => {
                 users: connectedUsers,
             });
         });
+        socket.on("sendtyping", (type) => {
+            var typing = type.typing;
+            var sender = type.sender;
+            var receiver = type.receiver;
+            socket.in(receiver).emit("receivetyping", {
+                typing: typing,
+                sender: sender,
+                receiver: receiver,
+            });
+        });
         socket.on("sendmessage", (message) => {
             var receiverid = message.receiverid;
             var senderid = message.senderid;
