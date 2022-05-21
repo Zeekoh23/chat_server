@@ -49,12 +49,4 @@ userrouter.delete("/deleteme", deleteMe);
 
 userrouter.use(protect);
 
-/*post(User.createUser);
-
-userrouter
-  .route('/:id')
-  .get(User.getUser)
-  */
-
-//export = userrouter;
 export { userrouter };

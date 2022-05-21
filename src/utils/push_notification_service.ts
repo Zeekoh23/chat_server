@@ -7,7 +7,7 @@ if (process.env.NODE_ENV !== "production") {
 import http, { IncomingMessage } from "http";
 import https, { RequestOptions, request } from "https";
 import { ONE_SIGNAL_CONFIG } from "../app.config";
-//const onesignalid: any = process.env.APP_ID;
+
 const onesignalkey: string = process.env.API_KEY as string;
 
 export const sendNotificationService = async (data: any, callback: any) => {
@@ -37,7 +37,6 @@ export const sendNotificationService = async (data: any, callback: any) => {
   });
   var stringified: string = JSON.stringify(data);
   req.write(JSON.parse(stringified));
-  //req.write(JSON.stringify(data));
 
   req.end();
 };

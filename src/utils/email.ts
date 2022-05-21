@@ -13,7 +13,7 @@ import { IUserDoc } from "../models/userModel";
 import CatchAsync from "./CatchAsync";
 
 const emailfrom: string = process.env.EMAIL_FROM as string;
-//const nodeenv: any = process.env.NODE_ENV;
+
 const sendgriduser: string = process.env.SENDGRID_USERNAME as string;
 const sendgridpass: any = process.env.SENDGRID_PASS;
 

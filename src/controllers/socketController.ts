@@ -11,7 +11,7 @@ import express, { Request, Router, NextFunction, Response } from "express";
 
 import { app } from "../index";
 var httpServer = http.createServer(app);
-//import { httpServer, app } from "./server";
+
 var io = require("socket.io")(httpServer);
 import { Message } from "../models/messageModel";
 import { getAll } from "../utils/HandlerFactory";
@@ -19,8 +19,6 @@ import CatchAsync from "../utils/CatchAsync";
 import { sendNotificationService } from "../utils/push_notification_service";
 import { ErrorHandling } from "../utils/ErrorHandling";
 import { ONE_SIGNAL_CONFIG } from "../app.config";
-
-//const socketrouter: Router = express.Router();
 
 const onesignalid: string = process.env.APP_ID as string;
 
@@ -179,29 +177,6 @@ function saveMessage(
   path: string,
   videopath: string
 ) {
-  /* var message: any = new Message({
-    isSender: isSender,
-    text: text,
-    time: time,
-    type1: type,
-    path: path,
-    senderid: sender,
-    receiverid: receiver,
-    videopath: videopath,
-  });
-  message.save();*/
-
-  //cipher function
-  /*const cipher: Cipher = crypto.createCipheriv(
-    algorithm,
-    securityKey,
-    initVector
-  );
-
-  //output encoding
-  let encryptedData = cipher.update(text, "utf-8", "hex");
-  encryptedData += cipher.final("hex");*/
-
   var message: any = new Message({
     senderid: sender,
     users: [
@@ -228,11 +203,7 @@ function saveMessage(
         (element: any) => element.receiverid === receiver
       );
 
-      if (
-        receiverIndex !== undefined &&
-        receiverIndex != -1 /*&&
-        doc.users[receiverIndex].messages.isSender != isSender*/
-      ) {
+      if (receiverIndex !== undefined && receiverIndex != -1) {
         doc.users[receiverIndex].messages.push({
           isSender: isSender,
           text: text,
@@ -263,33 +234,10 @@ function saveMessage(
   });
 }
 
-//export const fetchmessage = getAll(Message);
 export const fetchmessage = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     var senderid: string = req.body.senderid;
     var receiverid: string = req.body.receiverid;
-
-    /*const text1 = doc2[0].users[0].messages[0].text;
-
-    const decipher = crypto.createDecipheriv(
-      algorithm,
-      securityKey,
-      initVector
-    );
-    let decryptedData: string = decipher.update(text1, "hex", "utf-8");
-    decryptedData += decipher.final("utf8");
-    console.log(decryptedData);*/
-
-    /* Message.findOne({ senderid: senderid }, (err: any, doc: any) => {
-      var receiverIndex = doc.users.findIndex(
-        (element: any) => element.receiverid === receiverid
-      );
-
-      doc.users[receiverIndex].messages.update({
-        text: decryptedData,
-      });
-      doc.save();
-    });*/
 
     const doc = await Message.find(
       { senderid: senderid },
@@ -305,70 +253,17 @@ export const fetchmessage = CatchAsync(
         var messages = doc[0].users[0].messages;
         var mess = messages.slice(Math.max(messages.length - 15, 0));
         res.status(200).json({
-          //status: 'success',
           ...mess,
         });
-        //res.send(messages.slice(Math.max(messages.length - 15, 0)));
       } else {
         return next(
           new ErrorHandling("No messages found to the receiver", 404)
         );
-        //res.send([]);
       }
     } else {
       return next(new ErrorHandling("No messages found", 404));
-      //res.send([]);
     }
-    /*.then((doc: any) => {
-      if (doc.length > 0) {
-        if (doc[0].users.length > 0) {
-          var messages = doc[0].users[0].messages;
-          res.send(messages.slice(Math.max(messages.length - 15, 0)));
-        } else {
-          res.send([]);
-        }
-      } else {
-        res.send([]);
-      }
-    })
-    .catch((err: any) => {
-      console.log(err);
-    });*/
-
-    //var messages = doc[0].users[0].messages;
-    // var mes1 = messages.slice(Math.max(messages.length - 15, 0));
-
-    /*if (!doc) {
-      return next(new ErrorHandling("No doc found with messages", 404));
-    }*/
-
-    /*res.status(200).json({
-      status: "success",
-      data: {
-        mes1,
-      },
-    });*/
-    /*Message.find({senderid: senderid}, {
-      users: {
-        $eleMatch: {receiverid: receiverid}
-      }
-    }).then((doc: any) => {
-      if(doc.length > 0){
-        if(doc[0].users.length > 0){
-          var messages = doc[0].users[0].messages;
-          res.send(messages.slice(Math.max(messages.length - 15, 0)));
-        } else{
-          res.send([]);
-        }
-      } else{
-        res.send([]);
-      }
-    });*/
   }
 );
-
-//socketrouter.route("/fetchmessage").post(fetchmessage);
-
-//socketrouter.get("/connect", socketConnect);
 
 export { httpServer };

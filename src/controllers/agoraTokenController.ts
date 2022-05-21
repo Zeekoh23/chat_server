@@ -34,7 +34,6 @@ const generateAccessToken = (
   const channelName: string = req.query.channelName as string;
 
   if (!channelName) {
-    //return next(new ErrorHandling("Channel is required", 404));
     res.status(404).json({ error: "channel is required" });
   }
 

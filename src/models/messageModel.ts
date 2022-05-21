@@ -8,8 +8,6 @@ export interface IMessage {
   time: string;
   path: string;
   videopath: string;
- // senderid: string;
-  //receiverid: string;
 }
 
 const contentSchema = new Schema<IMessage>(
@@ -32,12 +30,6 @@ const contentSchema = new Schema<IMessage>(
     videopath: {
       type: String,
     },
-    /*senderid: {
-      type: String,
-    },
-    receiverid: {
-      type: String,
-    }*/
   },
   {
     toJSON: { virtuals: true },
@@ -48,7 +40,6 @@ const contentSchema = new Schema<IMessage>(
 const receiverSchema = new Schema({
   receiverid: {
     type: String,
-    //unique: true
   },
   messages: [contentSchema],
 });
@@ -56,7 +47,6 @@ const receiverSchema = new Schema({
 const messageSchema = new Schema({
   senderid: {
     type: String,
-    //unique: true,
   },
   users: [receiverSchema],
 });

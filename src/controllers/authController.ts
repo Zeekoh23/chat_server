@@ -12,14 +12,10 @@ import jwt, { Secret } from "jsonwebtoken";
 import { ErrorHandling } from "../utils/ErrorHandling";
 import { Email } from "../utils/email";
 import crypto from "crypto";
-//import Cookies from 'js-cookie';
-//import nodecookie from 'node-cookie';
-//import session from 'express-session';
-//import MongoStore from 'connect-mongo';
 
 const secret: Secret = process.env.JWT_SECRET as Secret;
 const mycookie: number = Number(process.env.JWT_COOKIE_EXPIRES_IN);
-//const dblocal: any = process.env.DATABASE_LOCAL;
+
 const expiresin: string = process.env.EXPIRES_IN as string;
 
 export function signToken(id: any) {
@@ -52,12 +48,6 @@ export function createSendToken(
 
   res.cookie("jwt", token, cookieOptions);
 
-  //Cookies.set('jwt', token, cookieOptions);
-  //nodecookie.create(res, 'jwt', token, cookieOptions);
-  //nodecookie.parse(req, token);
-  //nodecookie.get(req, 'jwt', token);
-  //res.setHeader('set-cookie', ['jwt; SameSite=None']);
-
   //remove password from the output
   user.password = undefined;
 
@@ -82,12 +72,8 @@ export const signup = CatchAsync(
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEXj0tnVJRzEzqSDdtGqfoqHgzaO7mmOxybg&usqp=CAU",
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      //passwordChangedAt: req.body.passwordChangedAt,
-      //passwordResetToken: req.body.passwordResetToken,
-      //passwordResetExpires: req.body.passwordResetExpires,
     });
 
-    //const user = await User.create(req.body);
     const url: string = `${req.protocol}://${req.get("host")}/me`;
     await new Email(user, url).sendWelcome();
     createSendToken(user, 201, res, req);
@@ -112,25 +98,6 @@ export const login = CatchAsync(
     }
     //if everything is okay send something to the client
     createSendToken(user, 200, res, req);
-    /*const token: any = signToken(user._id);
-
-    res.cookie('jwt', token, {
-    expires: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
-    maxAge: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
-    httpOnly: true,
-    secure: false,
-    
-  });
-
-   user.password = undefined;
-
-  res.status(200).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
-  });*/
   }
 );
 
@@ -153,7 +120,6 @@ export const protect = CatchAsync(
     } else if (req.cookies.jwt) {
       token = req.cookies.jwt;
     }
-    //console.log(token);
 
     if (!token) {
       return next(
@@ -165,12 +131,12 @@ export const protect = CatchAsync(
     }
 
     //2 verification token
-    //const decoded: any = await util.promisify(jwt.verify)(token, secret);
+
     const decoded: any = await jwt.verify(token, secret);
     console.log(decoded);
 
     //check if user still exists
-    //const user1 = new User();
+
     const freshUser = await User.findById(decoded.id);
     if (!freshUser) {
       return next(
@@ -207,15 +173,12 @@ export const isLoggedIn = async (
   if (req.cookies.jwt) {
     try {
       //2 verifies token
-      /*const decoded: any = await util.promisify(jwt.verify)(
-        req.cookies.jwt,
-        secret
-      );*/
+
       const decoded: any = await jwt.verify(req.cookies.jwt, secret);
       console.log(decoded);
 
       //check if user still exists
-      //const user1 = new User();
+
       const freshUser = await User.findById(decoded.id);
       if (!freshUser) {
         return next();
@@ -270,13 +233,6 @@ export const forgotPassword = CatchAsync(
 
     //send to users email
 
-    // try {
-    /*await sendEmail({
-        email: user1.email,
-        subject: 'Your password reset token valid for 10 min',
-        message,
-      });*/
-
     const url: string = `${req.protocol}://${req.get(
       "host"
     )}/resetpassword/${resetToken}`;
@@ -287,19 +243,6 @@ export const forgotPassword = CatchAsync(
       message: "Token sent to email",
     });
     return resetToken;
-    /* } catch (err: any) {
-      user1.passwordResetToken = undefined;
-      user1.passwordResetExpires = undefined;
-
-      await user1.save({ validateBeforeSave: false });
-
-      return next(
-        new ErrorHandling(
-          "There was an error sending the email, try again later!",
-          500
-        )
-      );
-    }*/
   }
 );
 

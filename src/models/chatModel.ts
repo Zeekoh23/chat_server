@@ -8,7 +8,6 @@ var minutes = date_ob.getMinutes();
 var seconds = date_ob.getSeconds();
 
 var time1 = hours + ":" + minutes + ":" + seconds;
-//let timestamp = date_ob.getSeconds();
 
 export interface IChat {
   name: string;
@@ -17,7 +16,7 @@ export interface IChat {
   image: string;
   about: string;
   users: any;
-  createdAt: Date,
+  createdAt: Date;
 }
 
 const chatSchema = new Schema<IChat>(
@@ -26,7 +25,6 @@ const chatSchema = new Schema<IChat>(
     email: String,
     number: {
       type: String,
-      // unique: true,
     },
     image: String,
     quantity: Number,
@@ -36,13 +34,10 @@ const chatSchema = new Schema<IChat>(
     users: Object,
     userid: {
       type: String,
-      //ref: "User",
     },
     createdAt: {
       type: Date,
-      //default: Date.now(),
-      //select: false
-    }
+    },
   },
   {
     toJSON: { virtuals: true },
