@@ -9,6 +9,5 @@ const socketController_1 = require("../controllers/socketController");
 const socketrouter = express_1.default.Router();
 exports.socketrouter = socketrouter;
 socketrouter.route("/fetchmessage").post(socketController_1.fetchmessage);
-//socketrouter.route("/").get(fetchmessage);
 socketrouter.route("/sendnotification").get(socketController_1.SendNotification);
 socketrouter.route("/sendnotificationid").post(socketController_1.SendNotificationToId);

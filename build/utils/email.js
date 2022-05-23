@@ -22,7 +22,6 @@ const ejs_1 = __importDefault(require("ejs"));
 const html_to_text_1 = __importDefault(require("html-to-text"));
 const path_1 = __importDefault(require("path"));
 const emailfrom = process.env.EMAIL_FROM;
-//const nodeenv: any = process.env.NODE_ENV;
 const sendgriduser = process.env.SENDGRID_USERNAME;
 const sendgridpass = process.env.SENDGRID_PASS;
 class Email {

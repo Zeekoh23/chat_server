@@ -22,13 +22,11 @@ const crypto_1 = __importDefault(require("crypto"));
 const index_1 = require("../index");
 var httpServer = http_1.default.createServer(index_1.app);
 exports.httpServer = httpServer;
-//import { httpServer, app } from "./server";
 var io = require("socket.io")(httpServer);
 const messageModel_1 = require("../models/messageModel");
 const CatchAsync_1 = __importDefault(require("../utils/CatchAsync"));
 const push_notification_service_1 = require("../utils/push_notification_service");
 const ErrorHandling_1 = require("../utils/ErrorHandling");
-//const socketrouter: Router = express.Router();
 const onesignalid = process.env.APP_ID;
 const algorithm = "aes-256-cbc";
 //generate 16 bytes of random data
@@ -137,27 +135,6 @@ io.on("connection", (socket) => {
     });
 });
 function saveMessage(text, time, type, sender, receiver, isSender, path, videopath) {
-    /* var message: any = new Message({
-      isSender: isSender,
-      text: text,
-      time: time,
-      type1: type,
-      path: path,
-      senderid: sender,
-      receiverid: receiver,
-      videopath: videopath,
-    });
-    message.save();*/
-    //cipher function
-    /*const cipher: Cipher = crypto.createCipheriv(
-      algorithm,
-      securityKey,
-      initVector
-    );
-  
-    //output encoding
-    let encryptedData = cipher.update(text, "utf-8", "hex");
-    encryptedData += cipher.final("hex");*/
     var message = new messageModel_1.Message({
         senderid: sender,
         users: [
@@ -180,9 +157,7 @@ function saveMessage(text, time, type, sender, receiver, isSender, path, videopa
         }
         else {
             var receiverIndex = doc.users.findIndex((element) => element.receiverid === receiver);
-            if (receiverIndex !== undefined &&
-                receiverIndex != -1 /*&&
-            doc.users[receiverIndex].messages.isSender != isSender*/) {
+            if (receiverIndex !== undefined && receiverIndex != -1) {
                 doc.users[receiverIndex].messages.push({
                     isSender: isSender,
                     text: text,
@@ -212,30 +187,9 @@ function saveMessage(text, time, type, sender, receiver, isSender, path, videopa
         console.log(err.message);
     });
 }
-//export const fetchmessage = getAll(Message);
 exports.fetchmessage = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var senderid = req.body.senderid;
     var receiverid = req.body.receiverid;
-    /*const text1 = doc2[0].users[0].messages[0].text;
-
-    const decipher = crypto.createDecipheriv(
-      algorithm,
-      securityKey,
-      initVector
-    );
-    let decryptedData: string = decipher.update(text1, "hex", "utf-8");
-    decryptedData += decipher.final("utf8");
-    console.log(decryptedData);*/
-    /* Message.findOne({ senderid: senderid }, (err: any, doc: any) => {
-      var receiverIndex = doc.users.findIndex(
-        (element: any) => element.receiverid === receiverid
-      );
-
-      doc.users[receiverIndex].messages.update({
-        text: decryptedData,
-      });
-      doc.save();
-    });*/
     const doc = yield messageModel_1.Message.find({ senderid: senderid }, {
         users: {
             $elemMatch: { receiverid: receiverid },
@@ -246,57 +200,12 @@ exports.fetchmessage = (0, CatchAsync_1.default)((req, res, next) => __awaiter(v
             var messages = doc[0].users[0].messages;
             var mess = messages.slice(Math.max(messages.length - 15, 0));
             res.status(200).json(Object.assign({}, mess));
-            //res.send(messages.slice(Math.max(messages.length - 15, 0)));
         }
         else {
             return next(new ErrorHandling_1.ErrorHandling("No messages found to the receiver", 404));
-            //res.send([]);
         }
     }
     else {
         return next(new ErrorHandling_1.ErrorHandling("No messages found", 404));
-        //res.send([]);
     }
-    /*.then((doc: any) => {
-      if (doc.length > 0) {
-        if (doc[0].users.length > 0) {
-          var messages = doc[0].users[0].messages;
-          res.send(messages.slice(Math.max(messages.length - 15, 0)));
-        } else {
-          res.send([]);
-        }
-      } else {
-        res.send([]);
-      }
-    })
-    .catch((err: any) => {
-      console.log(err);
-    });*/
-    //var messages = doc[0].users[0].messages;
-    // var mes1 = messages.slice(Math.max(messages.length - 15, 0));
-    /*if (!doc) {
-      return next(new ErrorHandling("No doc found with messages", 404));
-    }*/
-    /*res.status(200).json({
-      status: "success",
-      data: {
-        mes1,
-      },
-    });*/
-    /*Message.find({senderid: senderid}, {
-      users: {
-        $eleMatch: {receiverid: receiverid}
-      }
-    }).then((doc: any) => {
-      if(doc.length > 0){
-        if(doc[0].users.length > 0){
-          var messages = doc[0].users[0].messages;
-          res.send(messages.slice(Math.max(messages.length - 15, 0)));
-        } else{
-          res.send([]);
-        }
-      } else{
-        res.send([]);
-      }
-    });*/
 }));

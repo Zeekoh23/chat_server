@@ -23,13 +23,8 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ErrorHandling_1 = require("../utils/ErrorHandling");
 const email_1 = require("../utils/email");
 const crypto_1 = __importDefault(require("crypto"));
-//import Cookies from 'js-cookie';
-//import nodecookie from 'node-cookie';
-//import session from 'express-session';
-//import MongoStore from 'connect-mongo';
 const secret = process.env.JWT_SECRET;
 const mycookie = Number(process.env.JWT_COOKIE_EXPIRES_IN);
-//const dblocal: any = process.env.DATABASE_LOCAL;
 const expiresin = process.env.EXPIRES_IN;
 function signToken(id) {
     return jsonwebtoken_1.default.sign({ id }, secret, {
@@ -52,11 +47,6 @@ function createSendToken(user, statusCode, res, req) {
     if (process.env.NODE_ENV === "production")
         cookieOptions.secure = true;
     res.cookie("jwt", token, cookieOptions);
-    //Cookies.set('jwt', token, cookieOptions);
-    //nodecookie.create(res, 'jwt', token, cookieOptions);
-    //nodecookie.parse(req, token);
-    //nodecookie.get(req, 'jwt', token);
-    //res.setHeader('set-cookie', ['jwt; SameSite=None']);
     //remove password from the output
     user.password = undefined;
     res.status(statusCode).json({
@@ -78,11 +68,7 @@ exports.signup = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0,
         image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEXj0tnVJRzEzqSDdtGqfoqHgzaO7mmOxybg&usqp=CAU",
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
-        //passwordChangedAt: req.body.passwordChangedAt,
-        //passwordResetToken: req.body.passwordResetToken,
-        //passwordResetExpires: req.body.passwordResetExpires,
     });
-    //const user = await User.create(req.body);
     const url = `${req.protocol}://${req.get("host")}/me`;
     yield new email_1.Email(user, url).sendWelcome();
     createSendToken(user, 201, res, req);
@@ -101,25 +87,6 @@ exports.login = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, 
     }
     //if everything is okay send something to the client
     createSendToken(user, 200, res, req);
-    /*const token: any = signToken(user._id);
-
-    res.cookie('jwt', token, {
-    expires: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
-    maxAge: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
-    httpOnly: true,
-    secure: false,
-    
-  });
-
-   user.password = undefined;
-
-  res.status(200).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
-  });*/
 }));
 const logout = (req, res) => {
     res.cookie("jwt", "loggedout", {
@@ -138,16 +105,13 @@ exports.protect = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0
     else if (req.cookies.jwt) {
         token = req.cookies.jwt;
     }
-    //console.log(token);
     if (!token) {
         return next(new ErrorHandling_1.ErrorHandling("You are not logged in. Please log in to get access", 401));
     }
     //2 verification token
-    //const decoded: any = await util.promisify(jwt.verify)(token, secret);
     const decoded = yield jsonwebtoken_1.default.verify(token, secret);
     console.log(decoded);
     //check if user still exists
-    //const user1 = new User();
     const freshUser = yield userModel_1.User.findById(decoded.id);
     if (!freshUser) {
         return next(new ErrorHandling_1.ErrorHandling("The user belonging to the token does no longer exist", 401));
@@ -166,14 +130,9 @@ const isLoggedIn = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     if (req.cookies.jwt) {
         try {
             //2 verifies token
-            /*const decoded: any = await util.promisify(jwt.verify)(
-              req.cookies.jwt,
-              secret
-            );*/
             const decoded = yield jsonwebtoken_1.default.verify(req.cookies.jwt, secret);
             console.log(decoded);
             //check if user still exists
-            //const user1 = new User();
             const freshUser = yield userModel_1.User.findById(decoded.id);
             if (!freshUser) {
                 return next();
@@ -214,12 +173,6 @@ exports.forgotPassword = (0, CatchAsync_1.default)((req, res, next) => __awaiter
     const resetToken = user1.createPasswordResetToken();
     yield user1.save({ validateBeforeSave: false });
     //send to users email
-    // try {
-    /*await sendEmail({
-        email: user1.email,
-        subject: 'Your password reset token valid for 10 min',
-        message,
-      });*/
     const url = `${req.protocol}://${req.get("host")}/resetpassword/${resetToken}`;
     yield new email_1.Email(user1, url).sendPasswordReset();
     res.status(200).json({
@@ -227,19 +180,6 @@ exports.forgotPassword = (0, CatchAsync_1.default)((req, res, next) => __awaiter
         message: "Token sent to email",
     });
     return resetToken;
-    /* } catch (err: any) {
-      user1.passwordResetToken = undefined;
-      user1.passwordResetExpires = undefined;
-
-      await user1.save({ validateBeforeSave: false });
-
-      return next(
-        new ErrorHandling(
-          "There was an error sending the email, try again later!",
-          500
-        )
-      );
-    }*/
 }));
 exports.resetPassword = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     //get user based on the token

@@ -26,7 +26,6 @@ const generateAccessToken = (req, res, next) => {
     //get channel name
     const channelName = req.query.channelName;
     if (!channelName) {
-        //return next(new ErrorHandling("Channel is required", 404));
         res.status(404).json({ error: "channel is required" });
     }
     //get uid

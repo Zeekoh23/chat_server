@@ -13,7 +13,6 @@ const chatSchema = new mongoose_1.Schema({
     email: String,
     number: {
         type: String,
-        // unique: true,
     },
     image: String,
     quantity: Number,
@@ -23,13 +22,10 @@ const chatSchema = new mongoose_1.Schema({
     users: Object,
     userid: {
         type: String,
-        //ref: "User",
     },
     createdAt: {
         type: Date,
-        //default: Date.now(),
-        //select: false
-    }
+    },
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },

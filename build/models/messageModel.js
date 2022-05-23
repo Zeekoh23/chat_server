@@ -22,12 +22,6 @@ const contentSchema = new mongoose_1.Schema({
     videopath: {
         type: String,
     },
-    /*senderid: {
-      type: String,
-    },
-    receiverid: {
-      type: String,
-    }*/
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
@@ -35,14 +29,12 @@ const contentSchema = new mongoose_1.Schema({
 const receiverSchema = new mongoose_1.Schema({
     receiverid: {
         type: String,
-        //unique: true
     },
     messages: [contentSchema],
 });
 const messageSchema = new mongoose_1.Schema({
     senderid: {
         type: String,
-        //unique: true,
     },
     users: [receiverSchema],
 });

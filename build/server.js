@@ -36,9 +36,6 @@ process.on("unCaughtException", (err) => {
     process.exit(1);
 });
 const mongoose_1 = __importDefault(require("mongoose"));
-//import http from "http";
-//const app = express();
-//var httpServer = http.createServer(app);
 const _1 = require("./");
 const socketController_1 = require("./controllers/socketController");
 const AppRouter_1 = require("./AppRouter");
@@ -61,17 +58,10 @@ _1.app.use(AppRouter_1.AppRouter.getInstance());
 const server = socketController_1.httpServer.listen(port, "0.0.0.0", () => {
     console.log(`app running on port ${port}`);
 });
-/*const server1: any = app.listen(4000, () => {
-  console.log("app running on port 4000");
-});*/
 process.on("unhandledRejection", (err) => {
     console.log(err.name, err.message);
     console.log("UNHANDLED REJECTION! Shutting down..");
     server.close(() => {
         process.exit(1);
     });
-    /*server1.close(() => {
-      process.exit(1);
-    });*/
 });
-//export { httpServer, app };

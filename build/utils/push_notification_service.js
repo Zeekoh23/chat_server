@@ -18,7 +18,6 @@ if (process.env.NODE_ENV !== "production") {
     dotenv_1.default.config({ path: "./config.env" });
 }
 const https_1 = __importDefault(require("https"));
-//const onesignalid: any = process.env.APP_ID;
 const onesignalkey = process.env.API_KEY;
 const sendNotificationService = (data, callback) => __awaiter(void 0, void 0, void 0, function* () {
     var headers = {
@@ -45,7 +44,6 @@ const sendNotificationService = (data, callback) => __awaiter(void 0, void 0, vo
     });
     var stringified = JSON.stringify(data);
     req.write(JSON.parse(stringified));
-    //req.write(JSON.stringify(data));
     req.end();
 });
 exports.sendNotificationService = sendNotificationService;
