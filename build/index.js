@@ -27,15 +27,11 @@ const chatRoutes_1 = require("./routes/chatRoutes");
 const socketroutes_1 = require("./routes/socketroutes");
 const agoraTokenController_1 = require("./controllers/agoraTokenController");
 const viewRoutes_1 = require("./routes/viewRoutes");
-//development logging
-if (process.env.NODE_ENV === "development") {
-    app.use((0, morgan_1.default)("dev"));
-}
+app.enable("trust proxy");
 app.use((req, res, next) => {
     console.log("Hello from the middleware gang");
     next();
 });
-app.enable("trust proxy");
 app.use(express_1.default.static(__dirname + "/public"));
 app.engine("ejs", ejsmate);
 app.set("view engine", "ejs");
@@ -45,6 +41,10 @@ var clients = {};
 app.use((0, cors_1.default)());
 //set security http headers
 app.use((0, helmet_1.default)());
+//development logging
+if (process.env.NODE_ENV === "development") {
+    app.use((0, morgan_1.default)("dev"));
+}
 // data sanitization againtst NoSql query injection
 app.use((0, express_mongo_sanitize_1.default)());
 // data sanitization against XSS

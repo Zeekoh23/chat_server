@@ -37,15 +37,15 @@ const checktoken = (req, res, next) => {
     console.log(token);
     next();
 };
-function createSendToken(user, statusCode, res, req) {
+function createSendToken(user, statusCode, req, res) {
     const token = signToken(user._id);
     const cookieOptions = {
         expires: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
         maxAge: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
         httpOnly: true,
+        secure: req.secure || req.headers["x-forwarded-proto"] === "https",
     };
-    if (process.env.NODE_ENV === "production")
-        cookieOptions.secure = true;
+    //if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
     res.cookie("jwt", token, cookieOptions);
     //remove password from the output
     user.password = undefined;
@@ -71,7 +71,7 @@ exports.signup = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0,
     });
     const url = `${req.protocol}://${req.get("host")}/me`;
     yield new email_1.Email(user, url).sendWelcome();
-    createSendToken(user, 201, res, req);
+    createSendToken(user, 201, req, res);
 }));
 exports.login = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { number, password } = req.body;
@@ -201,7 +201,7 @@ exports.resetPassword = (0, CatchAsync_1.default)((req, res, next) => __awaiter(
     user.passwordResetExpires = undefined;
     yield user.save();
     //log the user in, send JWT
-    createSendToken(user, 200, res, req);
+    createSendToken(user, 200, req, res);
 }));
 exports.updatePassword = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     //get user from collection
@@ -216,5 +216,5 @@ exports.updatePassword = (0, CatchAsync_1.default)((req, res, next) => __awaiter
     yield user1.save();
     //user.findbyidandupdate will not work as intended
     //log user in, send jwt
-    createSendToken(user1, 200, res, req);
+    createSendToken(user1, 200, req, res);
 }));

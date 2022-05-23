@@ -7,9 +7,9 @@ if (process.env.NODE_ENV !== "production") {
 import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
-import path from "path";
+
 import cors from "cors";
-import ejs from "ejs";
+
 import compression from "compression";
 import mongoSanitize from "express-mongo-sanitize";
 import rateLimit from "express-rate-limit";
@@ -31,17 +31,12 @@ import { socketrouter } from "./routes/socketroutes";
 import { agorarouter } from "./controllers/agoraTokenController";
 import { viewrouter } from "./routes/viewRoutes";
 
-//development logging
-if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
-}
+app.enable("trust proxy");
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log("Hello from the middleware gang");
   next();
 });
-
-app.enable("trust proxy");
 
 app.use(express.static(__dirname + "/public"));
 
@@ -56,6 +51,11 @@ app.use(cors());
 
 //set security http headers
 app.use(helmet());
+
+//development logging
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 // data sanitization againtst NoSql query injection
 app.use(mongoSanitize());

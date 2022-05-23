@@ -33,8 +33,8 @@ const checktoken = (req: Request, res: Response, next: NextFunction) => {
 export function createSendToken(
   user: any,
   statusCode: number,
-  res: any,
-  req: any
+  req: Request,
+  res: any
 ) {
   const token: any = signToken(user._id);
 
@@ -42,9 +42,10 @@ export function createSendToken(
     expires: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
     maxAge: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
     httpOnly: true,
+    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
   };
 
-  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+  //if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
   res.cookie("jwt", token, cookieOptions);
 
@@ -76,7 +77,7 @@ export const signup = CatchAsync(
 
     const url: string = `${req.protocol}://${req.get("host")}/me`;
     await new Email(user, url).sendWelcome();
-    createSendToken(user, 201, res, req);
+    createSendToken(user, 201, req, res);
   }
 );
 
@@ -270,7 +271,7 @@ export const resetPassword = CatchAsync(
     await user.save();
 
     //log the user in, send JWT
-    createSendToken(user, 200, res, req);
+    createSendToken(user, 200, req, res);
   }
 );
 
@@ -293,6 +294,6 @@ export const updatePassword = CatchAsync(
     //user.findbyidandupdate will not work as intended
 
     //log user in, send jwt
-    createSendToken(user1, 200, res, req);
+    createSendToken(user1, 200, req, res);
   }
 );
