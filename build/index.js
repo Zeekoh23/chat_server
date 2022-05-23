@@ -12,6 +12,11 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
+const compression_1 = __importDefault(require("compression"));
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
+const xss = require("xss-clean");
+const hpp = require("hpp");
+const helmet_1 = __importDefault(require("helmet"));
 const ejsmate = require("ejs-mate");
 const errorController_1 = require("./controllers/errorController");
 const ErrorHandling_1 = require("./utils/ErrorHandling");
@@ -22,9 +27,15 @@ const chatRoutes_1 = require("./routes/chatRoutes");
 const socketroutes_1 = require("./routes/socketroutes");
 const agoraTokenController_1 = require("./controllers/agoraTokenController");
 const viewRoutes_1 = require("./routes/viewRoutes");
+//development logging
 if (process.env.NODE_ENV === "development") {
     app.use((0, morgan_1.default)("dev"));
 }
+app.use((req, res, next) => {
+    console.log("Hello from the middleware gang");
+    next();
+});
+app.enable("trust proxy");
 app.use(express_1.default.static(__dirname + "/public"));
 app.engine("ejs", ejsmate);
 app.set("view engine", "ejs");
@@ -32,13 +43,24 @@ app.set("views", __dirname + "/views");
 app.use(express_1.default.json());
 var clients = {};
 app.use((0, cors_1.default)());
-app.use(express_1.default.urlencoded({ extended: true }));
+//set security http headers
+app.use((0, helmet_1.default)());
+// data sanitization againtst NoSql query injection
+app.use((0, express_mongo_sanitize_1.default)());
+// data sanitization against XSS
+app.use(xss());
+// Body Parser. reading data from body into req.body
+app.use(express_1.default.json({ limit: "10kb" }));
+//url parser
+app.use(express_1.default.urlencoded({ extended: true, limit: "10kb" }));
 app.use(body_parser_1.default.urlencoded({ extended: true }));
-console.log(process.env.NODE_ENV);
+app.use((0, compression_1.default)());
+//middleware for time of request
 app.use((req, res, next) => {
-    console.log("Hello from the middleware gang");
+    req.requestTime = new Date().toISOString();
     next();
 });
+console.log(process.env.NODE_ENV);
 app.use("/api/v1/users", userRoutes_1.userrouter);
 app.use("/api/v1/chats", chatRoutes_1.chatrouter);
 app.use("/api/v1/socket", socketroutes_1.socketrouter);

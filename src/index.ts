@@ -10,6 +10,12 @@ import bodyParser from "body-parser";
 import path from "path";
 import cors from "cors";
 import ejs from "ejs";
+import compression from "compression";
+import mongoSanitize from "express-mongo-sanitize";
+import rateLimit from "express-rate-limit";
+const xss = require("xss-clean");
+const hpp = require("hpp");
+import helmet from "helmet";
 
 const ejsmate = require("ejs-mate");
 
@@ -25,9 +31,17 @@ import { socketrouter } from "./routes/socketroutes";
 import { agorarouter } from "./controllers/agoraTokenController";
 import { viewrouter } from "./routes/viewRoutes";
 
+//development logging
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log("Hello from the middleware gang");
+  next();
+});
+
+app.enable("trust proxy");
 
 app.use(express.static(__dirname + "/public"));
 
@@ -40,16 +54,32 @@ app.use(express.json());
 var clients: any = {};
 app.use(cors());
 
-app.use(express.urlencoded({ extended: true }));
+//set security http headers
+app.use(helmet());
+
+// data sanitization againtst NoSql query injection
+app.use(mongoSanitize());
+
+// data sanitization against XSS
+app.use(xss());
+
+// Body Parser. reading data from body into req.body
+app.use(express.json({ limit: "10kb" }));
+
+//url parser
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-console.log(process.env.NODE_ENV);
+app.use(compression());
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log("Hello from the middleware gang");
+//middleware for time of request
+app.use((req: any, res: Response, next: NextFunction) => {
+  req.requestTime = new Date().toISOString();
   next();
 });
+
+console.log(process.env.NODE_ENV);
 
 app.use("/api/v1/users", userrouter);
 app.use("/api/v1/chats", chatrouter);
