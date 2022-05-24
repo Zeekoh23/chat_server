@@ -11,87 +11,83 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GlobalErrorHandler = void 0;
 const ErrorHandling_1 = require("../utils/ErrorHandling");
-const handleCastleErrorDB = (err) => {
+const handleCastErrorDB = (err) => {
     const message = `Invalid ${err.path}: ${err.value}.`;
     return new ErrorHandling_1.ErrorHandling(message, 400);
 };
 const handleDuplicateFieldsDB = (err) => {
-    const value = err.errmsg.match(/(["'])(?:(?=(\\?))\2.)*?\1/)[0];
-    console.log(value);
-    const message = `Duplicate field values: ${value}, Please use another value!`;
+    const value = err.errmsg.match(/(["'])(\\?.)*\1/)[0];
+    const message = `Duplicate field value. please use another value`;
     return new ErrorHandling_1.ErrorHandling(message, 400);
 };
 const handleValidationErrorDB = (err) => {
     const errors = Object.values(err.errors).map((el) => el.message);
-    const message = `Invalid input data, ${errors.join(". ")}`;
+    const message = `Invalid input data. ${errors.join(". ")}`;
     return new ErrorHandling_1.ErrorHandling(message, 400);
 };
-const handleJWTError = () => new ErrorHandling_1.ErrorHandling("Invalid token, please login again!", 401);
-const handleJWTExpiredError = () => new ErrorHandling_1.ErrorHandling("Your token has expired! Please log in again", 401);
-function sendErrorDev(err, req, res) {
+const handleJWTError = () => new ErrorHandling_1.ErrorHandling("Invalid token. Please log in again!", 401);
+const handleJWTExpiredError = () => new ErrorHandling_1.ErrorHandling("Token is expired.Please login again!!!", 401);
+const sendErrorDev = (err, req, res) => {
+    // A) API
     if (req.originalUrl.startsWith("/api")) {
-        res.status(err.statusCode).json({
+        return res.status(err.statusCode).json({
             status: err.status,
             error: err,
             message: err.message,
             stack: err.stack,
         });
     }
-    else {
-        console.error("ERROR", err);
-        res.status(err.statusCode).render("error", {
-            title: "Something went wrong",
-            msg: err.message,
-        });
-    }
-}
+    // B) RENDERED WEBSITE
+    console.error("ERROR???", err);
+    return res.status(err.statusCode).render("error", {
+        title: "something went wrong",
+        msg: err.message,
+    });
+};
 const sendErrorProd = (err, req, res) => {
-    //api
+    // A) API
     if (req.originalUrl.startsWith("/api")) {
-        //a) operational or trusted error
+        // A) operational trusted error: send message to client
         if (err.isOperational) {
             return res.status(err.statusCode).json({
                 status: err.status,
                 message: err.message,
             });
         }
-        //b) programming or unknown error
-        //1. log error
-        console.error("ERROR ", err);
+        // B) Programming or other unknown error: don't leak details
+        console.error("ERROR???", err);
         return res.status(500).json({
             status: "error",
-            message: "Something went very wrong!",
+            message: "something went wrong",
         });
     }
-    //rendered website
-    //a) operational or trusted error
+    // B) RENDERED WEBSITE
     if (err.isOperational) {
         return res.status(err.statusCode).render("error", {
-            title: "Something went wrong",
+            title: "something went wrong",
             msg: err.message,
         });
     }
-    console.error("ERROR", err);
-    //b) programming or unknown error
+    // Programming or other unknown error: don't leak error information
+    // 1) Log error
+    console.error("ERROR???", err);
     return res.status(err.statusCode).render("error", {
-        title: "Something went wrong",
-        msg: "Please try again later",
+        title: "something went wrong",
+        msg: "Please try again",
     });
 };
 function GlobalErrorHandler(err, req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(err.stack);
         err.statusCode = err.statusCode || 500;
-        err.status = err.status || "error";
+        err.status = err.status || "err";
         if (process.env.NODE_ENV === "development") {
             sendErrorDev(err, req, res);
         }
         else if (process.env.NODE_ENV === "production") {
-            let error = Object.assign({}, err);
-            error.message = err.message;
+            let error = Object.assign(err);
             if (error.name === "CastError")
-                error = handleCastleErrorDB(error);
-            if ((error.statusCode = 11000))
+                error = handleCastErrorDB(error);
+            if (error.code === 11000)
                 error = handleDuplicateFieldsDB(error);
             if (error.name === "ValidationError")
                 error = handleValidationErrorDB(error);
