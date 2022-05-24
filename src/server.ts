@@ -44,13 +44,13 @@ const server: any = httpServer.listen(port, "0.0.0.0", () => {
   console.log(`app running on port ${port}`);
 });
 
-process.on("unhandledRejection", (err: any) => {
+/*process.on("unhandledRejection", (err: any) => {
   console.log(err.name, err.message);
   console.log("UNHANDLED REJECTION! Shutting down..");
   server.close(() => {
     process.exit(1);
   });
-}); //a he
+});*/ //a he
 
 //to help close the app if there's any error and run other pending request
 process.on("SIGTERM", () => {
