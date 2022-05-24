@@ -50,7 +50,7 @@ process.on("unhandledRejection", (err: any) => {
   server.close(() => {
     process.exit(1);
   });
-});
+}); //a he
 
 //to help close the app if there's any error and run other pending request
 process.on("SIGTERM", () => {

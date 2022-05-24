@@ -39,14 +39,16 @@ const checktoken = (req, res, next) => {
 };
 function createSendToken(user, statusCode, req, res) {
     const token = signToken(user._id);
+    res.setHeader("Set-Cookie", "visited=true; Max-Age=3000; HttpOnly, Secure");
     const cookieOptions = {
         expires: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
         maxAge: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        secure: req.secure || req.get("x-forwarded-proto") === "https",
+        secure: req.secure || req.headers["x-forwarded-proto"] === "https",
     };
-    // if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+    //if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
     res.cookie("jwt", token, cookieOptions);
+    //fastifyCookie.setCookie("jwt", token, cookieOptions);
     //remove password from the output
     user.password = undefined;
     res.status(statusCode).json({
@@ -86,7 +88,7 @@ exports.login = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, 
         return next(new ErrorHandling_1.ErrorHandling("Incorrect number or password", 401)); //unauthorised
     }
     //if everything is okay send something to the client
-    createSendToken(user, 200, res, req);
+    createSendToken(user, 200, req, res);
 }));
 const logout = (req, res) => {
     res.cookie("jwt", "loggedout", {

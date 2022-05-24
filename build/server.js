@@ -64,7 +64,7 @@ process.on("unhandledRejection", (err) => {
     server.close(() => {
         process.exit(1);
     });
-});
+}); //a he
 //to help close the app if there's any error and run other pending request
 process.on("SIGTERM", () => {
     console.log("SIGTERM RECEIVED, Shutting down gracefully");

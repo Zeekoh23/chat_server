@@ -12,6 +12,7 @@ import jwt, { Secret } from "jsonwebtoken";
 import { ErrorHandling } from "../utils/ErrorHandling";
 import { Email } from "../utils/email";
 import crypto from "crypto";
+import fastifyCookie from "@fastify/cookie";
 
 const secret: Secret = process.env.JWT_SECRET as Secret;
 const mycookie: number = Number(process.env.JWT_COOKIE_EXPIRES_IN);
@@ -33,21 +34,24 @@ const checktoken = (req: Request, res: Response, next: NextFunction) => {
 export function createSendToken(
   user: any,
   statusCode: number,
-  req: any,
-  res: any
+  req: Request,
+  res: Response
 ) {
   const token: any = signToken(user._id);
+
+  res.setHeader("Set-Cookie", "visited=true; Max-Age=3000; HttpOnly, Secure");
 
   const cookieOptions: any = {
     expires: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
     maxAge: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
     httpOnly: true,
-    secure: req.secure || req.get("x-forwarded-proto") === "https",
+    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
   };
 
-  // if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+  //if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
   res.cookie("jwt", token, cookieOptions);
+  //fastifyCookie.setCookie("jwt", token, cookieOptions);
 
   //remove password from the output
   user.password = undefined;
@@ -98,7 +102,7 @@ export const login = CatchAsync(
       return next(new ErrorHandling("Incorrect number or password", 401)); //unauthorised
     }
     //if everything is okay send something to the client
-    createSendToken(user, 200, res, req);
+    createSendToken(user, 200, req, res);
   }
 );
 

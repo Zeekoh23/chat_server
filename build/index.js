@@ -28,15 +28,10 @@ const socketroutes_1 = require("./routes/socketroutes");
 const agoraTokenController_1 = require("./controllers/agoraTokenController");
 const viewRoutes_1 = require("./routes/viewRoutes");
 app.enable("trust proxy");
-app.use((req, res, next) => {
-    console.log("Hello from the middleware gang");
-    next();
-});
 app.use(express_1.default.static(__dirname + "/public"));
 app.engine("ejs", ejsmate);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
-app.use(express_1.default.json());
 var clients = {};
 app.use((0, cors_1.default)());
 //set security http headers
@@ -49,11 +44,16 @@ if (process.env.NODE_ENV === "development") {
 app.use((0, express_mongo_sanitize_1.default)());
 // data sanitization against XSS
 app.use(xss());
+app.use((req, res, next) => {
+    console.log("Hello from the middleware gang");
+    next();
+});
 // Body Parser. reading data from body into req.body
 app.use(express_1.default.json({ limit: "10kb" }));
 //url parser
-app.use(express_1.default.urlencoded({ extended: true, limit: "10kb" }));
+app.use(express_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.urlencoded({ extended: true }));
+//app.use(cookieParser());
 app.use((0, compression_1.default)());
 //middleware for time of request
 app.use((req, res, next) => {

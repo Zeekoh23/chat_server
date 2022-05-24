@@ -16,6 +16,7 @@ import rateLimit from "express-rate-limit";
 const xss = require("xss-clean");
 const hpp = require("hpp");
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 const ejsmate = require("ejs-mate");
 
@@ -33,18 +34,11 @@ import { viewrouter } from "./routes/viewRoutes";
 
 app.enable("trust proxy");
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log("Hello from the middleware gang");
-  next();
-});
-
 app.use(express.static(__dirname + "/public"));
 
 app.engine("ejs", ejsmate);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
-
-app.use(express.json());
 
 var clients: any = {};
 app.use(cors());
@@ -63,13 +57,20 @@ app.use(mongoSanitize());
 // data sanitization against XSS
 app.use(xss());
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log("Hello from the middleware gang");
+  next();
+});
+
 // Body Parser. reading data from body into req.body
 app.use(express.json({ limit: "10kb" }));
 
 //url parser
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//app.use(cookieParser());
 
 app.use(compression());
 
