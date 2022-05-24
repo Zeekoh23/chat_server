@@ -7,7 +7,7 @@
     "start": "concurrently npm:start:*",
     "start:prod": "NODE_ENV=production nodemon build/server.js",
     "start:build": "tsc -w",
-    "start:run": "nodemon build/server.js",
+    "start:run": "node build/server.js",
     "debug": "ndb build/server.js",
     "watch:js": "parcel watch build/public/js/index.js --out-dir build/public/js --out-file bundle.js",
     "build:js": "parcel watch build/public/js/index.js --out-dir build/public/js --out-file bundle.js",

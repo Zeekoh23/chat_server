@@ -17,6 +17,7 @@ const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const helmet_1 = __importDefault(require("helmet"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const ejsmate = require("ejs-mate");
 const errorController_1 = require("./controllers/errorController");
 const ErrorHandling_1 = require("./utils/ErrorHandling");
@@ -53,7 +54,7 @@ app.use(express_1.default.json({ limit: "10kb" }));
 //url parser
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.urlencoded({ extended: true }));
-//app.use(cookieParser());
+app.use((0, cookie_parser_1.default)());
 app.use((0, compression_1.default)());
 //middleware for time of request
 app.use((req, res, next) => {
