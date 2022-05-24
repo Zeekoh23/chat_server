@@ -34,13 +34,14 @@ import { viewrouter } from "./routes/viewRoutes";
 
 app.enable("trust proxy");
 
-app.use(express.static(__dirname + "/public"));
-
 app.engine("ejs", ejsmate);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 
-var clients: any = {};
+//GLOBAL MIDDLEWARES
+app.use(express.static(__dirname + "/public"));
+
+//implement cors
 app.use(cors());
 
 //set security http headers

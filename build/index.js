@@ -29,11 +29,12 @@ const socketroutes_1 = require("./routes/socketroutes");
 const agoraTokenController_1 = require("./controllers/agoraTokenController");
 const viewRoutes_1 = require("./routes/viewRoutes");
 app.enable("trust proxy");
-app.use(express_1.default.static(__dirname + "/public"));
 app.engine("ejs", ejsmate);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
-var clients = {};
+//GLOBAL MIDDLEWARES
+app.use(express_1.default.static(__dirname + "/public"));
+//implement cors
 app.use((0, cors_1.default)());
 //set security http headers
 app.use((0, helmet_1.default)());
