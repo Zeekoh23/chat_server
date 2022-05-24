@@ -33,7 +33,7 @@ const checktoken = (req: Request, res: Response, next: NextFunction) => {
 export function createSendToken(
   user: any,
   statusCode: number,
-  req: Request,
+  req: any,
   res: any
 ) {
   const token: any = signToken(user._id);
@@ -42,10 +42,10 @@ export function createSendToken(
     expires: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
     maxAge: new Date(Date.now() + mycookie * 24 * 60 * 60 * 1000),
     httpOnly: true,
-    //secure: req.secure || req.headers["x-forwarded-proto"] === "https",
+    secure: req.secure || req.get("x-forwarded-proto") === "https",
   };
 
-  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+  // if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
   res.cookie("jwt", token, cookieOptions);
 
