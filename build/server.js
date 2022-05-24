@@ -58,17 +58,17 @@ _1.app.use(AppRouter_1.AppRouter.getInstance());
 const server = socketController_1.httpServer.listen(port, "0.0.0.0", () => {
     console.log(`app running on port ${port}`);
 });
-/*process.on("unhandledRejection", (err: any) => {
-  console.log(err.name, err.message);
-  console.log("UNHANDLED REJECTION! Shutting down..");
-  server.close(() => {
-    process.exit(1);
-  });
-});*/ //a he
 //to help close the app if there's any error and run other pending request
 process.on("SIGTERM", () => {
     console.log("SIGTERM RECEIVED, Shutting down gracefully");
     server.close(() => {
         console.log("Process terminated!");
+    });
+});
+process.on("unhandledRejection", (err) => {
+    console.log(err.name, err.message);
+    console.log("UNHANDLED REJECTION! Shutting down..");
+    server.close(() => {
+        process.exit(1);
     });
 });
