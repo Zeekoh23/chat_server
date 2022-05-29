@@ -73,44 +73,47 @@ export const GetChat1 = CatchAsync(
 
 export const DeleteChat = deleteOne(Chat);
 
-async function updatechats(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  prop: string
-) {
-  const chat = await Chat.findOneAndUpdate(
-    { prop: req.params.prop },
-    req.body,
-    { new: true, runValidators: true }
-  );
-
-  if (!chat) {
-    return next(new ErrorHandling("No document found with that time", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      chat,
-    },
-  });
-}
-
 export const UpdateChat1 = CatchAsync(
-  async (req: Request, res: Response, next: NextFunction, time: string) => {
-    updatechats(req, res, next, time);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const chat = await Chat.findOneAndUpdate(
+      { time: req.params.time },
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!chat) {
+      return next(new ErrorHandling("No document found with that time", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        chat,
+      },
+    });
   }
 );
 
 export const UpdateChat2 = CatchAsync(
-  async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-    lastMessage: string
-  ) => {
-    updatechats(req, res, next, lastMessage);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const chat = await Chat.findOneAndUpdate(
+      { lastMessage: req.params.lastMessage },
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!chat) {
+      return next(
+        new ErrorHandling("No document found with that message", 404)
+      );
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        chat,
+      },
+    });
   }
 );
 
@@ -135,44 +138,63 @@ export const UpdateChat3 = CatchAsync(
   }
 );
 
-async function updateChatProperty(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  prop: string
-) {
-  const chat = await Chat.updateMany(
-    { email: req.params.email },
-    { prop: req.body.prop }
-  );
-
-  if (!chat) {
-    return next(new ErrorHandling("Could not update", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      chat,
-    },
-  });
-}
-
 export const UpdateChatImage = CatchAsync(
-  async (req: Request, res: Response, next: NextFunction, image: string) => {
-    updateChatProperty(req, res, next, image);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const chat = await Chat.updateMany(
+      { email: req.params.email },
+      { image: req.body.image }
+    );
+
+    if (!chat) {
+      return next(new ErrorHandling("Could not update", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        chat,
+      },
+    });
   }
 );
 
 export const UpdateChatName = CatchAsync(
-  async (req: Request, res: Response, next: NextFunction, name: string) => {
-    updateChatProperty(req, res, next, name);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const chat = await Chat.updateMany(
+      { email: req.params.email },
+      { name: req.body.name }
+    );
+
+    if (!chat) {
+      return next(new ErrorHandling("Could not update", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        chat,
+      },
+    });
   }
 );
 
 export const UpdateChatAbout = CatchAsync(
-  async (req: Request, res: Response, next: NextFunction, about: string) => {
-    updateChatProperty(req, res, next, about);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const chat = await Chat.updateMany(
+      { email: req.params.email },
+      { about: req.body.about }
+    );
+
+    if (!chat) {
+      return next(new ErrorHandling("Could not update", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        chat,
+      },
+    });
   }
 );
 
