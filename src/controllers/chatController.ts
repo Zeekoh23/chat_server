@@ -158,4 +158,44 @@ export const UpdateChatAgain = CatchAsync(
   }
 );
 
+export const UpdateChatName = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const chat = await Chat.updateMany(
+      { email: req.params.email },
+      { name: req.body.name }
+    );
+
+    if (!chat) {
+      return next(new ErrorHandling("Could not update", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        chat,
+      },
+    });
+  }
+);
+
+export const UpdateChatAbout = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const chat = await Chat.updateMany(
+      { email: req.params.email },
+      { about: req.body.about }
+    );
+
+    if (!chat) {
+      return next(new ErrorHandling("Could not update", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        chat,
+      },
+    });
+  }
+);
+
 export const UpdateChat = updateOne(Chat);
