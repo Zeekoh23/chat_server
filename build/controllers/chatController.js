@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateChat = exports.UpdateChat3 = exports.UpdateChat2 = exports.UpdateChat1 = exports.DeleteChat = exports.GetChat1 = exports.GetChat = exports.GetAllChats = exports.createChat = void 0;
+exports.UpdateChat = exports.UpdateChatAgain = exports.UpdateChat3 = exports.UpdateChat2 = exports.UpdateChat1 = exports.DeleteChat = exports.GetChat1 = exports.GetChat = exports.GetAllChats = exports.createChat = void 0;
 const chatModel_1 = require("../models/chatModel");
 const CatchAsync_1 = __importDefault(require("../utils/CatchAsync"));
 const ErrorHandling_1 = require("../utils/ErrorHandling");
@@ -89,6 +89,18 @@ exports.UpdateChat3 = (0, CatchAsync_1.default)((req, res, next) => __awaiter(vo
     const chat = yield chatModel_1.Chat.findOneAndUpdate({ number: req.params.number }, req.body, { new: true, runValidators: true });
     if (!chat) {
         return next(new ErrorHandling_1.ErrorHandling("No document found with that number", 404));
+    }
+    res.status(200).json({
+        status: "success",
+        data: {
+            chat,
+        },
+    });
+}));
+exports.UpdateChatAgain = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const chat = yield chatModel_1.Chat.updateMany({ email: req.params.email }, { $set: { image: req.body } });
+    if (!chat) {
+        return next(new ErrorHandling_1.ErrorHandling("Could not update", 404));
     }
     res.status(200).json({
         status: "success",

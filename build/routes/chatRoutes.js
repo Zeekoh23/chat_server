@@ -14,3 +14,4 @@ chatrouter.route("/:id").delete(chatController_1.DeleteChat).post(chatController
 chatrouter.route("/time/:time").get(chatController_1.GetChat).post(chatController_1.UpdateChat1);
 chatrouter.route("/lastMessage/:lastMessage").post(chatController_1.UpdateChat2);
 chatrouter.route("/number/:number").get(chatController_1.GetChat1).post(chatController_1.UpdateChat3);
+chatrouter.route("/email/:email").post(chatController_1.UpdateChatAgain);
