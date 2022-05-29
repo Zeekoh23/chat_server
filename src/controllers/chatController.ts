@@ -138,7 +138,7 @@ export const UpdateChat3 = CatchAsync(
   }
 );
 
-export const UpdateChatAgain = CatchAsync(
+export const UpdateChatImage = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const chat = await Chat.updateMany(
       { email: req.params.email },
