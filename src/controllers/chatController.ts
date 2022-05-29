@@ -142,7 +142,7 @@ export const UpdateChatAgain = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const chat = await Chat.updateMany(
       { email: req.params.email },
-      { $set: { image: req.body } }
+      { image: req.body.image }
     );
 
     if (!chat) {

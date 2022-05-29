@@ -98,7 +98,7 @@ exports.UpdateChat3 = (0, CatchAsync_1.default)((req, res, next) => __awaiter(vo
     });
 }));
 exports.UpdateChatAgain = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const chat = yield chatModel_1.Chat.updateMany({ email: req.params.email }, { $set: { image: req.body } });
+    const chat = yield chatModel_1.Chat.updateMany({ email: req.params.email }, { image: req.body.image });
     if (!chat) {
         return next(new ErrorHandling_1.ErrorHandling("Could not update", 404));
     }
