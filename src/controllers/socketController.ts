@@ -24,11 +24,11 @@ import { ONE_SIGNAL_CONFIG } from "../app.config";
 
 const onesignalid: string = process.env.APP_ID as string;
 
-const algorithm: string = "aes-256-cbc";
-//generate 16 bytes of random data
-const initVector: BinaryLike = crypto.randomBytes(16);
-//secret key generate 32 bytes of random data
-const securityKey: CipherKey = crypto.randomBytes(32);
+// const algorithm: string = "aes-256-cbc";
+// //generate 16 bytes of random data
+// const initVector: BinaryLike = crypto.randomBytes(16);
+// //secret key generate 32 bytes of random data
+// const securityKey: CipherKey = crypto.randomBytes(32);
 
 export const SendNotification = (
   req: Request,

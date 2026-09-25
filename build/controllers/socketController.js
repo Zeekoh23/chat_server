@@ -18,7 +18,6 @@ if (process.env.NODE_ENV !== "production") {
     dotenv_1.default.config({ path: "./config.env" });
 }
 const http_1 = __importDefault(require("http"));
-const crypto_1 = __importDefault(require("crypto"));
 const index_1 = require("../index");
 var httpServer = http_1.default.createServer(index_1.app);
 exports.httpServer = httpServer;
@@ -30,11 +29,11 @@ const push_notification_service_1 = require("../utils/push_notification_service"
 const ErrorHandling_1 = require("../utils/ErrorHandling");
 //const socketrouter: Router = express.Router();
 const onesignalid = process.env.APP_ID;
-const algorithm = "aes-256-cbc";
-//generate 16 bytes of random data
-const initVector = crypto_1.default.randomBytes(16);
-//secret key generate 32 bytes of random data
-const securityKey = crypto_1.default.randomBytes(32);
+// const algorithm: string = "aes-256-cbc";
+// //generate 16 bytes of random data
+// const initVector: BinaryLike = crypto.randomBytes(16);
+// //secret key generate 32 bytes of random data
+// const securityKey: CipherKey = crypto.randomBytes(32);
 const SendNotification = (req, res, next) => {
     var message = {
         app_id: onesignalid,
