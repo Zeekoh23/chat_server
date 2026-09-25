@@ -12,7 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePassword = exports.resetPassword = exports.forgotPassword = exports.restrictTo = exports.isLoggedIn = exports.protect = exports.logout = exports.login = exports.signup = exports.createSendToken = exports.signToken = void 0;
+exports.updatePassword = exports.resetPassword = exports.forgotPassword = exports.isLoggedIn = exports.protect = exports.logout = exports.login = exports.signup = void 0;
+exports.signToken = signToken;
+exports.createSendToken = createSendToken;
+exports.restrictTo = restrictTo;
 const dotenv_1 = __importDefault(require("dotenv"));
 if (process.env.NODE_ENV !== "production") {
     dotenv_1.default.config({ path: "./config.env" });
@@ -23,20 +26,14 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ErrorHandling_1 = require("../utils/ErrorHandling");
 const email_1 = require("../utils/email");
 const crypto_1 = __importDefault(require("crypto"));
-//import Cookies from 'js-cookie';
-//import nodecookie from 'node-cookie';
-//import session from 'express-session';
-//import MongoStore from 'connect-mongo';
 const secret = process.env.JWT_SECRET;
 const mycookie = Number(process.env.JWT_COOKIE_EXPIRES_IN);
-//const dblocal: any = process.env.DATABASE_LOCAL;
 const expiresin = process.env.EXPIRES_IN;
 function signToken(id) {
     return jsonwebtoken_1.default.sign({ id }, secret, {
         expiresIn: process.env.JWT_EXPIRES_IN,
     });
 }
-exports.signToken = signToken;
 const checktoken = (req, res, next) => {
     let token = req.headers["authorization"];
     console.log(token);
@@ -68,7 +65,6 @@ function createSendToken(user, statusCode, res, req) {
         },
     });
 }
-exports.createSendToken = createSendToken;
 exports.signup = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel_1.User.create({
         name: req.body.name,
@@ -201,7 +197,6 @@ function restrictTo(...roles) {
         next();
     };
 }
-exports.restrictTo = restrictTo;
 exports.forgotPassword = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     //get user based on posted email
     const { email } = req.body;

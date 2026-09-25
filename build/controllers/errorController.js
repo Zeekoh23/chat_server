@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GlobalErrorHandler = void 0;
+exports.GlobalErrorHandler = GlobalErrorHandler;
 const ErrorHandling_1 = require("../utils/ErrorHandling");
 const handleCastleErrorDB = (err) => {
     const message = `Invalid ${err.path}: ${err.value}.`;
@@ -103,4 +103,3 @@ function GlobalErrorHandler(err, req, res, next) {
         }
     });
 }
-exports.GlobalErrorHandler = GlobalErrorHandler;

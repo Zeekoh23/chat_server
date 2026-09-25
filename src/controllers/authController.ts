@@ -12,14 +12,10 @@ import jwt, { Secret } from "jsonwebtoken";
 import { ErrorHandling } from "../utils/ErrorHandling";
 import { Email } from "../utils/email";
 import crypto from "crypto";
-//import Cookies from 'js-cookie';
-//import nodecookie from 'node-cookie';
-//import session from 'express-session';
-//import MongoStore from 'connect-mongo';
 
 const secret: Secret = process.env.JWT_SECRET as Secret;
 const mycookie: number = Number(process.env.JWT_COOKIE_EXPIRES_IN);
-//const dblocal: any = process.env.DATABASE_LOCAL;
+
 const expiresin: string = process.env.EXPIRES_IN as string;
 
 export function signToken(id: any) {

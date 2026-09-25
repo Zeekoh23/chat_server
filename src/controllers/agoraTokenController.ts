@@ -4,11 +4,8 @@ if (process.env.NODE_ENV !== "production") {
   dotenv.config({ path: "./config.env" });
 }
 
-import express, { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { RtcTokenBuilder, RtcRole } from "agora-access-token";
-
-import CatchAsync from "../utils/CatchAsync";
-import { ErrorHandling } from "../utils/ErrorHandling";
 
 const appid: string = process.env.AGORA_APPID as string;
 const app_cert: string = process.env.AGORA_APP_CERT as string;
