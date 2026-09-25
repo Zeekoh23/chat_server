@@ -99,11 +99,11 @@ userSchema.methods.correctPassword = async function correctPassword(
 };
 
 userSchema.methods.changePasswordAfter = async function (
-  JWTTimestamps
+  JWTTimestamps: any
 ): Promise<boolean> {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
+      (this.passwordChangedAt.getTime() / 1000).toString(),
       10
     );
     console.log(changedTimestamp, JWTTimestamps);
