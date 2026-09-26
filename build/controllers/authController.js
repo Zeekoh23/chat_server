@@ -80,7 +80,7 @@ exports.signup = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0,
     });
     //const user = await User.create(req.body);
     const url = `${req.protocol}://${req.get("host")}/me`;
-    yield new email_1.Email(user, url).sendWelcome();
+    //await new Email(user, url).sendWelcome();
     createSendToken(user, 201, res, req);
 }));
 exports.login = (0, CatchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
